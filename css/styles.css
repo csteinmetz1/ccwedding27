@@ -1,0 +1,580 @@
+/* =========================================================
+   Courtney & Christian - Wedding site
+   Design system inspired by the Save the Date invitation
+   ========================================================= */
+
+:root {
+  /* Palette (pulled from the invitation + engagement photo) */
+  --cream: #f6efe0;        /* page background */
+  --paper: #fbf6ea;        /* cards / panels */
+  --ink: #33342b;          /* charcoal-green primary text */
+  --ink-soft: #5a5b4f;     /* secondary text */
+  --sage: #66684e;         /* deep sage for text (WCAG AA ~5:1 on cream) */
+  --gold: #c99a3a;         /* warm mustard accent (decorative use) */
+  --line: #c9c0a8;         /* hairline borders */
+  --line-soft: #e3dcc8;    /* lighter hairline */
+
+  /* Type */
+  --serif: "Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
+  --script: "Pinyon Script", "Snell Roundhand", cursive;
+
+  /* Spacing / sizing */
+  --frame-gap: 16px;       /* inset of the decorative page frame */
+  --max-width: 1080px;
+  --section-pad: clamp(3.5rem, 9vw, 7.5rem);
+
+  /* Effects */
+  --shadow-soft: 0 18px 45px -25px rgba(51, 52, 43, 0.55);
+  --transition: 0.35s ease;
+}
+
+/* ----------------------------- Reset / base ----------------------------- */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  /* keep anchored sections clear of the sticky nav */
+  scroll-padding-top: 92px;
+  -webkit-text-size-adjust: 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+
+body {
+  margin: 0;
+  background-color: var(--cream);
+  color: var(--ink);
+  font-family: var(--serif);
+  font-size: clamp(1.05rem, 0.6vw + 1rem, 1.2rem);
+  line-height: 1.7;
+  font-weight: 400;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+a {
+  color: inherit;
+}
+
+/* --------------------------- Decorative frame --------------------------- */
+/* Thin inset border framing the whole viewport, echoing the invitation. */
+
+.page-frame {
+  position: fixed;
+  inset: var(--frame-gap);
+  border: 1px solid var(--line);
+  /* a second, inner hairline for the "double border" look of the card */
+  box-shadow: inset 0 0 0 1px transparent, inset 0 0 0 5px rgba(201, 192, 168, 0.35);
+  pointer-events: none;
+  z-index: 5;
+}
+
+@media (max-width: 600px) {
+  :root {
+    --frame-gap: 9px;
+  }
+  .page-frame {
+    box-shadow: inset 0 0 0 4px rgba(201, 192, 168, 0.32);
+  }
+}
+
+/* ------------------------------- Layout -------------------------------- */
+
+.container {
+  width: 100%;
+  max-width: var(--max-width);
+  margin-inline: auto;
+  padding-inline: clamp(1.5rem, 5vw, 4rem);
+}
+
+.section {
+  padding-block: var(--section-pad);
+  position: relative;
+}
+
+.section--tint {
+  background-color: var(--paper);
+}
+
+.section__head {
+  text-align: center;
+  max-width: 46rem;
+  margin: 0 auto clamp(2rem, 4vw, 3.25rem);
+}
+
+/* ---------------------------- Typography -------------------------------- */
+
+h1,
+h2,
+h3 {
+  font-weight: 500;
+  line-height: 1.08;
+  margin: 0;
+  color: var(--ink);
+}
+
+.eyebrow {
+  font-size: clamp(0.72rem, 0.4vw + 0.65rem, 0.85rem);
+  letter-spacing: 0.42em;
+  text-transform: uppercase;
+  color: var(--sage);
+  font-weight: 600;
+  margin: 0;
+  /* compensate for the trailing letter-spacing so text stays centered */
+  text-indent: 0.42em;
+}
+
+.script {
+  font-family: var(--script);
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--gold);
+}
+
+/* Ampersand accent: a standard serif "&" in the gold accent color,
+   used consistently for the names and the C & C monograms. */
+.amp {
+  font-family: var(--serif);
+  font-style: normal;
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+  color: var(--gold);
+}
+
+.section__title {
+  font-size: clamp(2rem, 4.5vw, 3.25rem);
+  letter-spacing: 0.01em;
+}
+
+.lead {
+  color: var(--ink-soft);
+  font-size: clamp(1.1rem, 0.6vw + 1rem, 1.3rem);
+}
+
+/* Decorative divider: short rule with a centered diamond */
+.divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.9rem;
+  margin: 1.4rem auto 0;
+  color: var(--line);
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  height: 1px;
+  width: clamp(2.5rem, 8vw, 5rem);
+  background: linear-gradient(to var(--dir, right), transparent, var(--line));
+}
+
+.divider::after {
+  --dir: left;
+}
+
+.divider__mark {
+  width: 6px;
+  height: 6px;
+  transform: rotate(45deg);
+  background-color: var(--gold);
+  flex: none;
+}
+
+/* ------------------------------- Nav ----------------------------------- */
+
+.site-nav {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem clamp(1.25rem, 5vw, 3.25rem);
+  background-color: transparent;
+  transition: background-color var(--transition), box-shadow var(--transition),
+    padding var(--transition);
+}
+
+.site-nav.is-scrolled {
+  background-color: rgba(246, 239, 224, 0.92);
+  backdrop-filter: saturate(120%) blur(6px);
+  box-shadow: 0 1px 0 rgba(201, 192, 168, 0.6);
+  padding-block: 0.6rem;
+}
+
+.site-nav__brand {
+  font-size: 1.35rem;
+  letter-spacing: 0.28em;
+  text-indent: 0.28em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.site-nav__links {
+  list-style: none;
+  display: flex;
+  align-items: center;
+  gap: clamp(1rem, 2.5vw, 2.25rem);
+  margin: 0;
+  padding: 0;
+}
+
+.site-nav__links a {
+  text-decoration: none;
+  color: var(--ink-soft);
+  font-size: 0.8rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  padding-bottom: 3px;
+  border-bottom: 1px solid transparent;
+  transition: color var(--transition), border-color var(--transition);
+}
+
+.site-nav__links a:hover,
+.site-nav__links a:focus-visible,
+.site-nav__links a.is-active {
+  color: var(--ink);
+  border-bottom-color: var(--gold);
+}
+
+@media (max-width: 560px) {
+  .site-nav__links {
+    gap: 1.1rem;
+  }
+  .site-nav__links a {
+    font-size: 0.7rem;
+    letter-spacing: 0.16em;
+  }
+  .site-nav__brand {
+    font-size: 1.1rem;
+  }
+}
+
+/* ------------------------------- Hero ---------------------------------- */
+
+.hero {
+  text-align: center;
+  padding-top: clamp(1rem, 3vw, 2.5rem);
+  padding-bottom: var(--section-pad);
+}
+
+.hero__eyebrow {
+  font-size: clamp(0.8rem, 0.5vw + 0.7rem, 1rem);
+  letter-spacing: 0.45em;
+  text-indent: 0.45em;
+}
+
+.hero__title {
+  font-size: clamp(3rem, 9vw, 6rem);
+  letter-spacing: 0.02em;
+  margin: 0.5rem 0 0.2rem;
+}
+
+.hero__meta {
+  font-size: clamp(1rem, 0.7vw + 0.9rem, 1.35rem);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+  margin: 0.4rem 0 0;
+}
+
+.hero__note {
+  margin-top: 0.9rem;
+  color: var(--sage);
+  font-style: italic;
+  font-size: 1.05rem;
+}
+
+.hero__note a {
+  color: var(--ink);
+  text-decoration-color: var(--line);
+  text-underline-offset: 3px;
+}
+
+/* Arched engagement photo, mirroring the invitation's arch */
+.hero__arch {
+  margin: clamp(2rem, 5vw, 3.25rem) auto clamp(1.75rem, 4vw, 2.75rem);
+  width: min(420px, 78vw);
+}
+
+.arch-frame {
+  position: relative;
+  padding: 10px;
+  background-color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 50% 50% 10px 10px / 36% 36% 10px 10px;
+  box-shadow: var(--shadow-soft);
+}
+
+.arch-frame img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 3 / 4;
+  object-fit: cover;
+  border-radius: 50% 50% 4px 4px / 36% 36% 4px 4px;
+}
+
+/* ----------------------------- Countdown -------------------------------- */
+
+.countdown {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: clamp(1.1rem, 4vw, 2.75rem);
+  margin: clamp(1.5rem, 4vw, 2.5rem) auto 0;
+  padding: 0;
+  list-style: none;
+}
+
+.countdown__unit {
+  min-width: 3.5rem;
+}
+
+.countdown__num {
+  display: block;
+  font-size: clamp(1.9rem, 4vw, 2.9rem);
+  line-height: 1;
+  font-weight: 500;
+  font-variant-numeric: tabular-nums;
+  color: var(--ink);
+}
+
+.countdown__label {
+  display: block;
+  margin-top: 0.4rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.24em;
+  text-transform: uppercase;
+  color: var(--sage);
+  text-indent: 0.24em;
+}
+
+.countdown__sep {
+  align-self: center;
+  color: var(--line);
+  font-size: 1.5rem;
+}
+
+@media (max-width: 480px) {
+  .countdown__sep {
+    display: none;
+  }
+}
+
+/* ------------------------------ Buttons -------------------------------- */
+
+.btn {
+  display: inline-block;
+  font-family: var(--serif);
+  font-size: 0.82rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  font-weight: 600;
+  color: var(--cream);
+  background-color: var(--ink);
+  border: 1px solid var(--ink);
+  padding: 0.85rem 2.2rem;
+  border-radius: 999px;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background-color var(--transition), color var(--transition),
+    transform var(--transition);
+}
+
+.btn:hover,
+.btn:focus-visible {
+  background-color: var(--sage);
+  border-color: var(--sage);
+  transform: translateY(-1px);
+}
+
+.btn--ghost {
+  color: var(--ink);
+  background-color: transparent;
+}
+
+.btn--ghost:hover,
+.btn--ghost:focus-visible {
+  color: var(--cream);
+  background-color: var(--ink);
+  transform: translateY(-1px);
+}
+
+.btn[aria-disabled="true"],
+.btn.is-disabled {
+  background-color: transparent;
+  color: var(--ink-soft);
+  border-color: var(--line);
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+/* ------------------------------- RSVP ---------------------------------- */
+
+.rsvp {
+  text-align: center;
+}
+
+.rsvp__card {
+  max-width: 38rem;
+  margin: 0 auto;
+  background-color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: clamp(2.25rem, 5vw, 3.5rem);
+  box-shadow: var(--shadow-soft);
+}
+
+.rsvp__status {
+  display: inline-block;
+  margin-bottom: 1.1rem;
+  font-size: 0.72rem;
+  letter-spacing: 0.26em;
+  text-transform: uppercase;
+  /* readable ink text with a gold-accented border + faint gold wash */
+  color: var(--ink-soft);
+  background-color: rgba(201, 154, 58, 0.1);
+  border: 1px solid var(--gold);
+  border-radius: 999px;
+  padding: 0.3rem 1rem;
+  text-indent: 0.26em;
+}
+
+.rsvp__text {
+  color: var(--ink-soft);
+  margin: 0 auto 1.75rem;
+  max-width: 30rem;
+}
+
+/* Drop-in target for the Google Form embed once RSVP goes live */
+.rsvp__form {
+  margin-top: 1.5rem;
+}
+
+/* ------------------------------ Footer --------------------------------- */
+
+.site-footer {
+  text-align: center;
+  padding: clamp(2.5rem, 6vw, 4rem) 1rem clamp(2.25rem, 5vw, 3.25rem);
+  border-top: 1px solid var(--line-soft);
+}
+
+.site-footer__monogram {
+  font-size: 1.6rem;
+  letter-spacing: 0.26em;
+  text-indent: 0.26em;
+  text-transform: uppercase;
+}
+
+.site-footer__meta {
+  margin: 0.6rem 0 0;
+  color: var(--ink-soft);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+}
+
+.site-footer__fine {
+  margin: 1rem 0 0;
+  color: var(--sage);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+/* --------------------------- Stub sections ----------------------------- */
+/* Generic styles so the commented-out sections render nicely when enabled */
+
+.prose {
+  max-width: 42rem;
+  margin: 0 auto;
+  color: var(--ink-soft);
+  text-align: center;
+}
+
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  gap: clamp(1.25rem, 3vw, 2rem);
+}
+
+.card {
+  background-color: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.card h3 {
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.card p {
+  color: var(--ink-soft);
+  margin: 0;
+}
+
+.card p + p {
+  margin-top: 0.4rem;
+}
+
+.coming-soon {
+  color: var(--sage);
+  font-style: italic;
+}
+
+/* Accessibility helper */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+.skip-link {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%) translateY(-150%);
+  top: 0.5rem;
+  z-index: 20;
+  background-color: var(--ink);
+  color: var(--cream);
+  padding: 0.6rem 1.2rem;
+  border-radius: 999px;
+  text-decoration: none;
+  font-size: 0.8rem;
+  letter-spacing: 0.12em;
+  transition: transform var(--transition);
+}
+
+.skip-link:focus {
+  transform: translateX(-50%) translateY(0);
+}
